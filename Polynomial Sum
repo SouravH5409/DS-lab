@@ -1,0 +1,78 @@
+#include<stdio.h>
+//Structure for coefficient and exponent
+struct Polynomial {
+    int coeff;
+    int expo;
+};
+void Read(struct Polynomial poly[],int terms)
+{
+    printf("(Type coeff and expo with a space)\n");
+    for(int i=0;i<terms;i++){
+        scanf("%d %d",&poly[i].coeff,&poly[i].expo);
+    }
+}
+void Display(struct Polynomial poly[],int terms)
+{
+    for(int i=0;i<terms;i++){
+        printf("%d^%d",poly[i].coeff,poly[i].expo);
+        if(i<terms)
+        printf("+");
+
+    }
+}
+
+void Sum(struct Polynomial poly1[],int t1,struct Polynomial poly2[],int t2,struct Polynomial Result[])
+{
+    int i=0,j=0,k=0;
+    while(i<t1 && j<t2)  {
+        if(poly1[i].expo > poly2[j].expo)
+        {
+            Result[k]=poly1[i];
+            i++;
+        }
+        else if(poly1[i].expo < poly2[j].expo)
+        {
+            Result[k]=poly2[j];
+            j++;
+        }
+        else{
+            Result[k].expo=poly1[i].expo;
+            Result[k].coeff=poly1[i].coeff+poly2[j].coeff;
+        }
+         k++;
+    }
+   while(i<t1){
+        Result[k]=poly1[i];
+        i++;
+        k++;
+    }
+    while(j<t2){
+        Result[k]=poly2[i];
+        j++;
+        k++;
+    }
+}
+int main(){
+    int t1,t2;
+    printf("Enter the number of terms of Polynomial 1\n");
+    scanf("%d",&t1);
+    struct Polynomial poly1[t1];
+    struct Polynomial poly2[t2];
+    printf("Enter the values of Polynomial 1\n");
+    Read(poly1,t1);
+    printf("Enter the number of terms of Polynomial 2\n");
+    scanf("%d",&t2);
+    printf("Enter the values of Polynomial 2\n");
+    Read(poly2,t2);
+    int size =(t1>t2)?t1:t2;
+    struct Polynomial Result[size];
+    Sum(poly1,t1,poly2,t2,Result);
+    printf("Polynomial 1 is :/n");
+    Display(poly1,t1);
+    printf("Polynomial 2 is :/n");
+    Display(poly2,t2);
+
+return 0;
+
+}
+    
