@@ -1,0 +1,47 @@
+#include <stdio.h>
+typedef struct{
+    int coeff;
+    int exp;
+}p;
+p poly[100];
+void Read(p poly[],int terms){
+    printf("Enter the terms (in the format coeffcient_exponent)\n");
+    for(int i=0;i<terms;i++){
+        scanf("%d %d",&poly[i].coeff,&poly[i].exp);
+    }
+}
+void Display(p poly[],int terms){
+    for(int i=0;i<terms;i++){
+        printf("%dx^%d",poly[i].coeff,poly[i].exp);
+        if(i<terms-1){
+            printf("+");
+        }
+    }
+}
+int power(int x,int y){
+    int z=1;
+    while(y!=0){
+        z*=x;
+        --y;
+    }
+    return z;
+}
+int Evaluate(p poly[],int terms,int x){
+    int result = 0;
+    for(int i=0;i<terms;i++){
+         result=result+poly[i].coeff*power(x,poly[i].exp);
+    }
+    return result;
+}
+void main(){
+    int x,term,value=0;
+    printf("Enter the number of terms of the polynomial");
+    scanf("%d",&term);
+    Read(poly,term);
+    printf("The polynomial is\n");
+    Display(poly,term);
+    printf("Enter the value of x\n");
+    scanf("%d",&x);
+    value+=Evaluate(poly,term,x);
+    printf("The value of expression is : %d",value);
+}
