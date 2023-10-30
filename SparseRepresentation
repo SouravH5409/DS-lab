@@ -1,0 +1,66 @@
+#include<stdio.h>
+void Read_sparsematrix(int a[100][100],int m, int n)
+{
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&a[i][j]);
+        }
+    }
+}
+void Display_sparsematrix(int a[100][100],int m, int n)
+{
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            printf("%d\t",a[i][j]);
+        }
+        printf("\n");
+    }   
+}
+void sparse_rep(int arr1[100][100],int m, int n)
+{
+    int count=0;arr1[100][3];
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(arr1[i][j]!=0){
+                count++;
+            }
+
+        }
+    }
+    arr1[0][0]=m;
+    arr1[0][1]=n;
+    arr1[0][2]=count;
+    int k=0;
+    for(int i=0;i<m;i++){
+        for(int j=0;j<n;j++){
+            if(arr1[i][j]!=0){
+                 k++;
+                arr1[k][0]=i;
+                arr1[k][1]=j;
+                arr1[k][2]=arr1[i][j];
+               
+            }
+        }
+    }
+    for(int i=0;i<=count;i++){
+        for(int j=0;j<3;j++){
+            printf("%d\t",arr1[i][j]);
+        }
+        printf("\n");
+    }
+     printf("Sparsity is %d/%d",((m*n)-count),m*n);
+}
+void main(){
+    int arr[100][100],arr1[100][100],m,n;
+    printf("Enter the rows and columns of sparse matrix\n");
+    scanf("%d %d",&m,&n);
+    printf("Enter the elements of sparse matrix\n");
+    Read_sparsematrix(arr,m,n);
+    printf("The sparse matrix is \n");
+    Display_sparsematrix(arr,m,n);
+    printf("Sparse matrix representation is\n");
+    printf("Row\tColumn\tValue\n");
+    sparse_rep(arr,m,n);
+
+
+}
