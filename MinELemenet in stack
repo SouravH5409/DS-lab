@@ -1,0 +1,56 @@
+//program to find least element in the stack
+#include<stdio.h>
+#define Max 100
+int top1=-1;
+int top2=-1;
+int stack[Max];
+int minstack[10];
+
+void Display(int stack[],int top){
+	for(int i=0;i<top+1;i++){
+		printf("%d\t\n",stack[i]);
+	}
+}
+
+void push(){
+	int data;
+	printf("Enter the element to be push\n");
+	scanf("%d",&data);
+	if(top1>=Max-1){
+		printf("Stack is full\n");
+		}
+	else
+	{
+		stack[++top1]=data;
+	}
+	if(top2==-1||data<minstack[top2]){
+		minstack[++top2]=data;
+	}
+	else{
+	}
+	Display(stack,top1);
+}
+void main(){
+	int ch;
+	printf("Enter element to be pushed\n");
+	push();
+	do
+	{
+	printf("Do youn want to continue\t1.Yes\t2.No\n");
+	scanf("%d",&ch);
+	switch(ch){
+		case 1:
+			if(ch==1){
+				push();
+			}
+			else{
+			}
+			break;
+		case 2:
+			break;
+			}
+	}
+	while(ch<=1);
+	printf("minimum element is ");
+	Display(minstack,top2);
+	}
