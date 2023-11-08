@@ -52,5 +52,5 @@ void main(){
 	}
 	while(ch<=1);
 	printf("minimum element is ");
-	Display(minstack,top2);
+	printf("%d",stack[top2]);
 	}
