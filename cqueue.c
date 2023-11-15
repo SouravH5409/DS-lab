@@ -9,28 +9,29 @@ void Enqueue(int data){
   	else{
   	 
   		if(front ==-1){
-		front =0;
-		rear= 0;
-		cqueue[rear]=data;
+		front = rear = 0;
 	}
 		else{
 		rear=(rear+1)%MAX;
-		cqueue[rear]=data;
+		
 	}
+		cqueue[rear]=data;
 }
 }
 void Dequeue(){
-	if (front==-1){
+	if (front == rear && front==-1){
 		printf("Queue is empty\n");
 		}
-	else if(front == rear){
+	else{
 		int item=cqueue[front];
 		printf("Dequeued Element is:%d\n",item);
+		if (front == rear){
+            		front = rear = -1;
+		}
+		else{
 		front=(front+1)%MAX;
 	}
-	else{
-		front=(front+1)%MAX;
-	}
+    }
 }
 void Display(){
 	if(front==-1 && rear==-1){
@@ -43,14 +44,17 @@ void Display(){
 			printf("%d\t",cqueue[i]);
 			printf("\n");
 		}
-	   }
+	     }
 		else{ 
 		
 	   	for(int i=0;i<MAX;i++){
 		printf("%d",cqueue[i]);
+		}
+            	for (int i=0; i<=rear; i++){
+                printf("%d ",cqueue[i]);
+		}
 	  }
 	  }
-}
 }
 void main(){
 	int ch;
