@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure for the linked list
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to display the linked list
+void displayList(struct Node* head) {
+    struct Node* current = head;
+    while (current != NULL) {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+// Function to reverse the linked list
+struct Node* reverseList(struct Node* head) {
+    struct Node* prev = NULL;
+    struct Node* current = head;
+    struct Node* next = NULL;
+
+    while (current != NULL) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+
+    return prev;
+}
+
+// Function to sort the linked list (bubble sort used for simplicity)
+void sortList(struct Node* head) {
+    int swapped, temp;
+    struct Node* current;
+    struct Node* lptr = NULL;
+
+    if (head == NULL)
+        return;
+
+    do {
+        swapped = 0;
+        current = head;
+
+        while (current->next != lptr) {
+            if (current->data > current->next->data) {
+                // Swap data
+                temp = current->data;
+                current->data = current->next->data;
+                current->next->data = temp;
+
+                swapped = 1;
+            }
+            current = current->next;
+        }
+        lptr = current;
+    } while (swapped);
+}
+
+int main() {
+    struct Node* head = NULL;
+    int choice, data;
+
+   
+        printf("\nLinked List Operations:\n");
+        printf("1. Insert Node\n");
+        printf("2. Display List\n");
+        printf("3. Sort List\n");
+        printf("4. Reverse List\n");
+        printf("5. Exit\n");
+ do {
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                // Insert Node
+                printf("Enter data to insert: ");
+                scanf("%d", &data);
+                if (head == NULL) {
+                    head = createNode(data);
+                } else {
+                    struct Node* temp = head;
+                    while (temp->next != NULL) {
+                        temp = temp->next;
+                    }
+                    temp->next = createNode(data);
+                }
+                break;
+
+            case 2:
+                // Display List
+                if (head == NULL) {
+                    printf("List is empty.\n");
+                } else {
+                    printf("Linked List: ");
+                    displayList(head);
+                }
+                break;
+
+            case 3:
+                // Sort List
+                if (head == NULL) {
+                    printf("List is empty.\n");
+                } else {
+                    sortList(head);
+                    printf("List sorted.\n");
+                    displayList(head);
+                }
+                break;
+
+            case 4:
+                // Reverse List
+                if (head == NULL) {
+                    printf("List is empty.\n");
+                } else {
+                    head = reverseList(head);
+                    printf("List reversed.\n");
+                    displayList(head);
+                }
+                break;
+
+            case 5:
+                // Exit
+                printf("Exiting program.\n");
+                break;
+
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
+
