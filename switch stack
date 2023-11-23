@@ -1,0 +1,45 @@
+switch (choice) {
+            case 1:
+                // Push
+                printf("Enter data to push: ");
+                scanf("%d", &data);
+                top = push(top, data);
+                break;
+
+            case 2:
+                // Pop
+                top = pop(top, &poppedData);
+                printf("Popped element: %d\n", poppedData);
+                break;
+
+            case 3:
+                // Peek
+                data = peek(top);
+                if (data != -1) {
+                    printf("Top element: %d\n", data);
+                }
+                break;
+
+            case 4:
+                // Display Stack
+                displayStack(top);
+                break;
+
+            case 5:
+                // Exit
+                printf("Exiting program.\n");
+                break;
+
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+
+    } while (choice != 5);
+
+    // Free memory before exiting (if necessary)
+    while (!isEmpty(top)) {
+        top = pop(top, &poppedData);
+    }
+
+    return 0;
+}
