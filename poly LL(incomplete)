@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure for a term in a polynomial
+struct Node {
+    int coeff;  // Coefficient of the term
+    int exp;    // Exponent of the term
+    struct Node* next;  // Pointer to the next term
+};
+
+// Function to create a new node
+struct Node* createNode(int coeff, int exp) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->coeff = coeff;
+    newNode->exp = exp;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a term into a polynomial
+void insertTerm(struct Node** poly, int coeff, int exp) {
+    struct Node* newNode = createNode(coeff, exp);
+
+    if (*poly == NULL) {
+        *poly = newNode;
+    } else {
+        struct Node* last = *poly;
+        while (last->next != NULL) {
+            last = last->next;
+        }
+        last->next = newNode;
+    }
+}
+
+// Function to add two polynomials
+struct Node* addPolynomials(struct Node* poly1, struct Node* poly2) {
+    struct Node* result = NULL;
+
+    while (poly1 != NULL || poly2 != NULL) {
+        int coeff1 = (poly1 != NULL) ? poly1->coeff : 0;
+        int exp1 = (poly1 != NULL) ? poly1->exp : 0;
+
+        int coeff2 = (poly2 != NULL) ? poly2->coeff : 0;
+        int exp2 = (poly2 != NULL) ? poly2->exp : 0;
+
+        int sumCoeff = coeff1 + coeff2;
+
+        insertTerm(&result, sumCoeff, exp1);
+
+        if (poly1 != NULL) {
+            poly1 = poly1->next;
+        }
+        if (poly2 != NULL) {
+            poly2 = poly2->next;
+        }
+    }
+
+    return result;
+}
+
+// Function to display a polynomial
+void displayPolynomial(struct Node* poly) {
+    while (poly != NULL) {
+        printf("%dx^%d", poly->coeff, poly->exp);
+
+        if (poly->next != NULL) {
+            printf(" + ");
+        }
+
+        poly = poly->next;
+    }
+    printf("\n");
+}
+
+// Main function
+int main() {
+    struct Node* poly1 = NULL;
+    struct Node* poly2 = NULL;
+    struct Node* result = NULL;
+
+    // Insert terms into the first polynomial
+    insertTerm(&poly1, 3, 2);
+    insertTerm(&poly1, 4, 1);
+    insertTerm(&poly1, 5, 0);
+
+    // Insert terms into the second polynomial
+    insertTerm(&poly2, 1, 3);
+    insertTerm(&poly2, 2, 1);
+    insertTerm(&poly2, 3, 0);
+
+    // Display the first polynomial
+    printf("Polynomial 1: ");
+    displayPolynomial(poly1);
+
+    // Display the second polynomial
+    printf("Polynomial 2: ");
+    displayPolynomial(poly2);
+
+    // Add the polynomials
+    result = addPolynomials(poly1, poly2);
+
+    // Display the result
+    printf("Sum: ");
+    displayPolynomial(result);
+
+    // Free allocated memory
+    free(poly1);
+    free(poly2);
+    free(result);
+
+    return 0;
+}
