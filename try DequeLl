@@ -1,0 +1,173 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure for a deque element
+struct Node {
+    int data;           // Data of the node
+    struct Node* next;  // Pointer to the next node
+};
+
+// Structure for the deque
+struct Deque {
+    struct Node* front;  // Pointer to the front of the deque
+    struct Node* rear;   // Pointer to the rear of the deque
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to initialize a deque
+void initializeDeque(struct Deque* deque) {
+    deque->front = deque->rear = NULL;
+}
+
+// Function to check if the deque is empty
+int isEmpty(struct Deque* deque) {
+    return deque->front == NULL;
+}
+
+// Function to insert an element at the front of the deque
+void insertFront(struct Deque* deque, int data) {
+    struct Node* newNode = createNode(data);
+
+    if (isEmpty(deque)) {
+        deque->front = deque->rear = newNode;
+    } else {
+        newNode->next = deque->front;
+        deque->front = newNode;
+    }
+
+    printf("Inserted %d at the front.\n", data);
+}
+
+// Function to insert an element at the rear of the deque
+void insertRear(struct Deque* deque, int data) {
+    struct Node* newNode = createNode(data);
+
+    if (isEmpty(deque)) {
+        deque->front = deque->rear = newNode;
+    } else {
+        deque->rear->next = newNode;
+        deque->rear = newNode;
+    }
+
+    printf("Inserted %d at the rear.\n", data);
+}
+
+// Function to delete an element from the front of the deque
+void deleteFront(struct Deque* deque) {
+    if (isEmpty(deque)) {
+        printf("Deque is empty. Cannot delete from front.\n");
+    } else {
+        struct Node* temp = deque->front;
+        deque->front = deque->front->next;
+        free(temp);
+        printf("Deleted from the front.\n");
+
+        // If deque becomes empty, update rear to NULL
+        if (deque->front == NULL) {
+            deque->rear = NULL;
+        }
+    }
+}
+
+// Function to delete an element from the rear of the deque
+void deleteRear(struct Deque* deque) {
+    if (isEmpty(deque)) {
+        printf("Deque is empty. Cannot delete from rear.\n");
+    } else {
+        struct Node* temp = deque->front;
+
+        // If there is only one element
+        if (deque->front == deque->rear) {
+            free(temp);
+            deque->front = deque->rear = NULL;
+        } else {
+            // Traverse to the second-to-last node
+            while (temp->next != deque->rear) {
+                temp = temp->next;
+            }
+
+            free(deque->rear);
+            temp->next = NULL;
+            deque->rear = temp;
+        }
+
+        printf("Deleted from the rear.\n");
+
+        // If deque becomes empty, update front to NULL
+        if (deque->front == NULL) {
+            deque->rear = NULL;
+        }
+    }
+}
+
+// Function to display the elements of the deque
+void displayDeque(struct Deque* deque) {
+    struct Node* current = deque->front;
+
+    if (isEmpty(deque)) {
+        printf("Deque is empty.\n");
+    } else {
+        printf("Deque: ");
+        while (current != NULL) {
+            printf("%d ", current->data);
+            current = current->next;
+        }
+        printf("\n");
+    }
+}
+
+// Main function
+int main() {
+    struct Deque deque;
+    initializeDeque(&deque);
+
+    int choice, data;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Insert at Front\n");
+        printf("2. Insert at Rear\n");
+        printf("3. Delete from Front\n");
+        printf("4. Delete from Rear\n");
+        printf("5. Display Deque\n");
+        printf("6. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter data to insert at front: ");
+                scanf("%d", &data);
+                insertFront(&deque, data);
+                break;
+            case 2:
+                printf("Enter data to insert at rear: ");
+                scanf("%d", &data);
+                insertRear(&deque, data);
+                break;
+            case 3:
+                deleteFront(&deque);
+                break;
+            case 4:
+                deleteRear(&deque);
+                break;
+            case 5:
+                displayDeque(&deque);
+                break;
+            case 6:
+                break;
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+    } while (choice != 6);
+
+    return 0;
+}
