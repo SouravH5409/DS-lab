@@ -1,173 +1,124 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-// Node structure for a deque element
-struct Node {
-    int data;           // Data of the node
-    struct Node* next;  // Pointer to the next node
+//Deque Using Linked List
+#include<stdio.h>
+#include<stdlib.h>
+struct Node{
+	int data;
+	struct Node *next;
+	struct Node *prev;
 };
-
-// Structure for the deque
-struct Deque {
-    struct Node* front;  // Pointer to the front of the deque
-    struct Node* rear;   // Pointer to the rear of the deque
-};
-
-// Function to create a new node
-struct Node* createNode(int data) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->next = NULL;
-    return newNode;
+struct Node*front=NULL;
+struct Node*rear = NULL;
+void EnqueueR(int item){
+	 struct Node *newNode=(struct Node*) malloc(sizeof(struct Node));
+	 newNode->data=item;
+	 newNode->next=NULL;
+	      	 newNode->prev=NULL;
+	if(front==NULL){
+		front=rear=newNode;
+	}
+	else{
+		rear->next=newNode;
+		newNode->prev=rear;
+		rear=newNode;
+		}
+}
+void EnqueueF(int item){
+		 struct Node *newNode=(struct Node*) malloc(sizeof(struct Node));
+		 newNode->data=item;
+		if(front==NULL){
+		newNode->next=NULL;
+	      	newNode->prev=NULL;
+		front=rear=newNode;
+		}
+		else{
+			front->prev=newNode;
+			newNode->next= front;
+			front=newNode;
+		}
+	}
+void DequeueF(){
+	if(front==NULL){
+		printf("Deque is empty");
+	}
+	else{
+	struct Node *temp=front;
+		front=front->next;
+		front->prev=NULL;
+		free(temp);
+	}
+}
+void DequeueR(){
+	if(rear==NULL){
+		printf("Deque is empty\n");
+	}
+	else{
+		struct Node*temp=rear;
+		if(rear->prev!=NULL){
+			rear=rear->prev;
+			rear->next=NULL;
+		}else
+		{
+		
+			front=rear=NULL;
+		}
+		free(temp);
+}
+}
+void Display(){
+{
+	if(front==NULL)
+	{
+		printf("queue empty\n");
+	}
+	else
+	{
+		struct Node *temp=front;
+		printf("queue element:\n");
+		while(temp!=NULL)
+		{
+			printf("%d\n",temp->data);
+	  		temp=temp->next;
+	  	}
+	  	printf("\n");
+	  }
+}
 }
 
-// Function to initialize a deque
-void initializeDeque(struct Deque* deque) {
-    deque->front = deque->rear = NULL;
-}
-
-// Function to check if the deque is empty
-int isEmpty(struct Deque* deque) {
-    return deque->front == NULL;
-}
-
-// Function to insert an element at the front of the deque
-void insertFront(struct Deque* deque, int data) {
-    struct Node* newNode = createNode(data);
-
-    if (isEmpty(deque)) {
-        deque->front = deque->rear = newNode;
-    } else {
-        newNode->next = deque->front;
-        deque->front = newNode;
-    }
-
-    printf("Inserted %d at the front.\n", data);
-}
-
-// Function to insert an element at the rear of the deque
-void insertRear(struct Deque* deque, int data) {
-    struct Node* newNode = createNode(data);
-
-    if (isEmpty(deque)) {
-        deque->front = deque->rear = newNode;
-    } else {
-        deque->rear->next = newNode;
-        deque->rear = newNode;
-    }
-
-    printf("Inserted %d at the rear.\n", data);
-}
-
-// Function to delete an element from the front of the deque
-void deleteFront(struct Deque* deque) {
-    if (isEmpty(deque)) {
-        printf("Deque is empty. Cannot delete from front.\n");
-    } else {
-        struct Node* temp = deque->front;
-        deque->front = deque->front->next;
-        free(temp);
-        printf("Deleted from the front.\n");
-
-        // If deque becomes empty, update rear to NULL
-        if (deque->front == NULL) {
-            deque->rear = NULL;
-        }
-    }
-}
-
-// Function to delete an element from the rear of the deque
-void deleteRear(struct Deque* deque) {
-    if (isEmpty(deque)) {
-        printf("Deque is empty. Cannot delete from rear.\n");
-    } else {
-        struct Node* temp = deque->front;
-
-        // If there is only one element
-        if (deque->front == deque->rear) {
-            free(temp);
-            deque->front = deque->rear = NULL;
-        } else {
-            // Traverse to the second-to-last node
-            while (temp->next != deque->rear) {
-                temp = temp->next;
-            }
-
-            free(deque->rear);
-            temp->next = NULL;
-            deque->rear = temp;
-        }
-
-        printf("Deleted from the rear.\n");
-
-        // If deque becomes empty, update front to NULL
-        if (deque->front == NULL) {
-            deque->rear = NULL;
-        }
-    }
-}
-
-// Function to display the elements of the deque
-void displayDeque(struct Deque* deque) {
-    struct Node* current = deque->front;
-
-    if (isEmpty(deque)) {
-        printf("Deque is empty.\n");
-    } else {
-        printf("Deque: ");
-        while (current != NULL) {
-            printf("%d ", current->data);
-            current = current->next;
-        }
-        printf("\n");
-    }
-}
-
-// Main function
-int main() {
-    struct Deque deque;
-    initializeDeque(&deque);
-
-    int choice, data;
-
-    do {
-        printf("\nMenu:\n");
-        printf("1. Insert at Front\n");
-        printf("2. Insert at Rear\n");
-        printf("3. Delete from Front\n");
-        printf("4. Delete from Rear\n");
-        printf("5. Display Deque\n");
-        printf("6. Exit\n");
-
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                printf("Enter data to insert at front: ");
-                scanf("%d", &data);
-                insertFront(&deque, data);
-                break;
-            case 2:
-                printf("Enter data to insert at rear: ");
-                scanf("%d", &data);
-                insertRear(&deque, data);
-                break;
-            case 3:
-                deleteFront(&deque);
-                break;
-            case 4:
-                deleteRear(&deque);
-                break;
-            case 5:
-                displayDeque(&deque);
-                break;
-            case 6:
-                break;
-            default:
-                printf("Invalid choice. Please enter a valid option.\n");
-        }
-    } while (choice != 6);
-
-    return 0;
-}
+void main(){
+	int ch,data;
+	printf("\nDouble Ended Queue using Linked List\n");
+	printf("1.Enqueue at Front\n");
+	printf("2.Enqueue at Rear\n");
+	printf("3.Dequeue at Front\n");
+	printf("4.Dequeue at Front\n");
+	printf("5.Display\n");
+	printf("5.Exit\n");
+	do{
+	printf("Enter your choice\n");
+	scanf("%d",&ch);
+	switch(ch){
+		case 1:
+			printf("Enter the data\n");
+			scanf("%d",&data);
+			EnqueueF(data);
+			break;
+		case 2:
+			printf("Enter the data\n");
+			scanf("%d",&data);
+			EnqueueR(data);
+			break;
+		case 3:
+			DequeueF();
+			break;
+		case 4:
+			DequeueR();
+			break;
+		case 5:
+			Display();
+			break;
+		case 6:
+			printf("Exiting....");
+			exit(0);
+		}
+	}while(ch<7);
+	}
