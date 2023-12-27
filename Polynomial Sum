@@ -1,78 +1,79 @@
-#include<stdio.h>
-//Structure for coefficient and exponent
-struct Polynomial {
-    int coeff;
-    int expo;
-};
-void Read(struct Polynomial poly[],int terms)
-{
-    printf("(Type coeff and expo with a space)\n");
-    for(int i=0;i<terms;i++){
-        scanf("%d %d",&poly[i].coeff,&poly[i].expo);
-    }
-}
-void Display(struct Polynomial poly[],int terms)
-{
-    for(int i=0;i<terms;i++){
-        printf("%d^%d",poly[i].coeff,poly[i].expo);
-        if(i<terms)
-        printf("+");
+#include <stdio.h>
+#define MAX_TERMS 100
 
-    }
-}
+// Structure to represent a term in a polynomial
+typedef struct {
+    int coefficient;
+    int exponent;
+} Term;
 
-void Sum(struct Polynomial poly1[],int t1,struct Polynomial poly2[],int t2,struct Polynomial Result[])
-{
-    int i=0,j=0,k=0;
-    while(i<t1 && j<t2)  {
-        if(poly1[i].expo > poly2[j].expo)
-        {
-            Result[k]=poly1[i];
-            i++;
+// Function to perform polynomial addition
+void addPolynomials(Term poly1[], int size1, Term poly2[], int size2, Term result[], int *sizeResult) {
+    int i = 0, j = 0, k = 0;
+
+    while (i < size1 && j < size2) {
+        if (poly1[i].exponent > poly2[j].exponent) {
+            result[k++] = poly1[i++];
+        } else if (poly1[i].exponent < poly2[j].exponent) {
+            result[k++] = poly2[j++];
+        } else {
+            result[k].exponent = poly1[i].exponent;
+            result[k++].coefficient = poly1[i++].coefficient + poly2[j++].coefficient;
         }
-        else if(poly1[i].expo < poly2[j].expo)
-        {
-            Result[k]=poly2[j];
-            j++;
-        }
-        else{
-            Result[k].expo=poly1[i].expo;
-            Result[k].coeff=poly1[i].coeff+poly2[j].coeff;
-        }
-         k++;
     }
-   while(i<t1){
-        Result[k]=poly1[i];
-        i++;
-        k++;
+
+    // Copy any remaining terms from poly1
+    while (i < size1) {
+        result[k++] = poly1[i++];
     }
-    while(j<t2){
-        Result[k]=poly2[i];
-        j++;
-        k++;
+
+    // Copy any remaining terms from poly2
+    while (j < size2) {
+        result[k++] = poly2[j++];
+    }
+
+    *sizeResult = k;
+}
+
+// Function to input a polynomial from the user
+void inputPolynomial(Term poly[], int size) {
+    printf("Enter the coefficients and exponents of the polynomial:\n");
+    for (int i = 0; i < size; i++) {
+        printf("Coefficient for term %d: ", i + 1);
+        scanf("%d", &poly[i].coefficient);
+
+        printf("Exponent for term %d: ", i + 1);
+        scanf("%d", &poly[i].exponent);
     }
 }
-int main(){
-    int t1,t2;
-    printf("Enter the number of terms of Polynomial 1\n");
-    scanf("%d",&t1);
-    struct Polynomial poly1[t1];
-    struct Polynomial poly2[t2];
-    printf("Enter the values of Polynomial 1\n");
-    Read(poly1,t1);
-    printf("Enter the number of terms of Polynomial 2\n");
-    scanf("%d",&t2);
-    printf("Enter the values of Polynomial 2\n");
-    Read(poly2,t2);
-    int size =(t1>t2)?t1:t2;
-    struct Polynomial Result[size];
-    Sum(poly1,t1,poly2,t2,Result);
-    printf("Polynomial 1 is :/n");
-    Display(poly1,t1);
-    printf("Polynomial 2 is :/n");
-    Display(poly2,t2);
 
-return 0;
-
+// Function to display a polynomial
+void displayPolynomial(Term poly[], int size) {
+    for (int i = 0; i < size - 1; i++) {
+        printf("%dx^%d + ", poly[i].coefficient, poly[i].exponent);
+    }
+    printf("%dx^%d\n", poly[size - 1].coefficient, poly[size - 1].exponent);
 }
-    
+
+int main() {
+
+    Term poly1[MAX_TERMS], poly2[MAX_TERMS], result[MAX_TERMS];
+    int size1, size2, sizeResult;
+
+    printf("Enter the number of terms in the first polynomial: ");
+    scanf("%d", &size1);
+    inputPolynomial(poly1, size1);
+
+    printf("Enter the number of terms in the second polynomial: ");
+    scanf("%d", &size2);
+    inputPolynomial(poly2, size2);
+
+    // Perform polynomial addition
+    addPolynomials(poly1, size1, poly2, size2, result, &sizeResult);
+
+    // Display the result
+    printf("Resultant polynomial after addition: ");
+    displayPolynomial(result, sizeResult);
+
+    return 0;
+}
